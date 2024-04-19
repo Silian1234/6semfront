@@ -6,7 +6,7 @@ import Location from "../components/Location"
 
 export default function Gym() {
     return <main className="w-[1300px] flex mx-auto flex-col mt-36">
-        <HeroPhoto />
+        <HeroPhoto title="СпортЛайт"/>
         <Description />
         <Personnel />
         <Schedule />

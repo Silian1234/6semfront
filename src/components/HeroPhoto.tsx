@@ -5,7 +5,11 @@ import Photo3 from '../assets/image-2012-01-24-11318012-70-membri-grupului-anony
 import { useState } from 'react'
 import PageCircle from './PageCircle'
 
-export default function HeroPhoto() {
+type HeroPhotoProps = {
+    title: string
+}
+
+export default function HeroPhoto({ title }: HeroPhotoProps) {
     const [slideCount, setSlideCount] = useState(0)
     const maxSlides = 2
 
@@ -13,7 +17,7 @@ export default function HeroPhoto() {
 
     return <>
         <article>
-            <p className="font-open-sans font-bold text-[36px] leading-[49px]">Название клуба</p>
+            <p className="font-open-sans font-bold text-[36px] leading-[49px]">{title}</p>
             <section className="flex mt-8">
                 <div className='grid place-content-center w-[255px] h-[474px] bg-[rgba(0,_0,_0,_0.85)] cursor-pointer relative' onClick={() => setSlideCount(prev => prev > 0 ? prev - 1 : 0)}>
                     <img src={ArrowIcon} className='w-[16px] h-[38px]' />

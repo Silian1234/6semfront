@@ -16,16 +16,27 @@ export default {
           2: '#9E562E'
         },
         gray: {
-          1: '#9CA3A3'
+          1: '#9CA3A3',
+          2: '#A8AEAE',
+          3: '#5B5E5F',
+          4: '#BFBFBF',
+          5: '808181'
         },
         red: {
           1: '#EE8686'
         },
         green: {
-          1: '#AEDAB5'
+          1: '#AEDAB5',
+          2: '#83D26F'
+        },
+        dark: {
+          1: '#3B4658'
         },
         background: '#F7F6F4'
       }
+    },
+    boxShadow: {
+      dark: "0px 4px 21px 0px rgba(0, 0, 0, 0.25)"
     },
   },
   plugins: [],

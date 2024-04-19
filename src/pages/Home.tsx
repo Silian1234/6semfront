@@ -5,7 +5,7 @@ import Schedule from "../components/Schedule"
 
 export default function Home() {
     return <main className="w-[1300px] flex mx-auto flex-col mt-36">
-        <HeroPhoto />
+        <HeroPhoto title="Название клуба"/>
         <Description />
         <Personnel />
         <Schedule />
