@@ -37,7 +37,6 @@ mock.onGet('/api/blog/posts').reply(200, () =>
 
 mock.onGet('/api/gym/sportlite').reply(200, () => (
     {
-
         name: "СпортЛайт",
         photos: [],
         description: [
@@ -64,7 +63,10 @@ mock.onGet('/api/gym/sportlite/trainers').reply(200, () =>
                 "Заслуженный тренер России",
                 "Призер чемпионата мира 2029"
             ],
-            photo: null
+            phone: "+22823984",
+            email: "dafjhkla@gmail.com",
+            photo: null,
+            gyms: ["sportlite", "sport228"]
         },
         {
             name: "Викторина Анна Геннадьевна",

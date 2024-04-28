@@ -24,7 +24,7 @@ export default function HeroPhoto({ title }: HeroPhotoProps) {
                     <img src={photos[slideCount]} className='absolute object-left object-cover h-full -z-10' />
                 </div>
                 <div className='relative w-[712px] h-[474px] overflow-hidden'>
-                    <div className='absolute flex transition-all duration-500 ease-in-out h-full w-fit' style={{ left: `-${100 * slideCount}%` }}>
+                    <div className='absolute flex transition-all duration-500 ease-out h-full w-fit' style={{ left: `-${100 * slideCount}%` }}>
                         <div className='w-[712px] h-[474px]'>
                             <img src={Photo1} className='object-cover' />
                         </div>
