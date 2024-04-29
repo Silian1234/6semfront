@@ -1,6 +1,5 @@
 import NavButton from "../components/NavButton"
 import Photo from '../assets/58489f94d6cea63cab1c83b99c292254.jpg'
-import SmallButton from "../components/SmallButton"
 
 export default function Post() {
     return <main className="w-[1300px] flex mx-auto flex-col mt-36">
