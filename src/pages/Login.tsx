@@ -1,16 +1,26 @@
 import { FormEvent, useState } from 'react'
+import { useLogin } from '../hooks/useLogin'
+import { useNavigate } from 'react-router-dom'
 
 export default function Login() {
-    const [email, setEmail] = useState('')
+    const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [passwordHidden, setPasswordHidden] = useState(false)
-    const [emailError, setEmailError] = useState(false)
-    const [passwordError, setPasswordError] = useState('')
+    const [usernameError, setUsernameError] = useState(false)
+    const [passwordError, setPasswordError] = useState(false)
     const [wrongCredentials, setWrongCredentials] = useState(false)
-
+    const { login } = useLogin()
+    const navigate = useNavigate()
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+
+        if (!username) return setUsernameError(true)
+        if (!password) return setPasswordError(true)
+
+        const success = await login(username, password)
+        if (!success) return setWrongCredentials(true)
+        navigate('/profile/me')
     }
 
     return (
@@ -22,18 +32,18 @@ export default function Login() {
                 </div>
                 <hr className='border-0 h-[1px] bg-gray-1' />
                 <form onSubmit={handleSubmit}>
-                    <div className={`flex place-content-between mt-12 border-[1px] mx-4 py-5 rounded-md ${(emailError || wrongCredentials) ? 'border-red-1' : 'border-gray-1'}`}>
-                        <input className='mr-4 ml-7 block flex-grow outline-none' type="text" placeholder='Введите адрес электронной почты' value={email} onChange={e => {
+                    <div className={`flex place-content-between mt-12 border-[1px] mx-4 py-5 rounded-md ${(usernameError || wrongCredentials) ? 'border-red-1' : 'border-gray-1'}`}>
+                        <input className='mr-4 ml-7 block flex-grow outline-none' type="text" placeholder='Введите логин' value={username} onChange={e => {
                             setWrongCredentials(false)
-                            setEmailError(false)
-                            setEmail(e.target.value)
+                            setUsernameError(false)
+                            setUsername(e.target.value)
                         }} />
                     </div>
-                    {(emailError && !wrongCredentials) ? <p className='absolute text-red-1 ml-4 mt-1 font-inter'>Некорректный E-mail</p> : null}
+                    {(!username) ? <p className='absolute text-red-1 ml-4 mt-1 font-inter'>Введите логин</p> : null}
                     <div className={`flex place-content-between mt-12 border-[1px] mx-4 py-5 rounded-md ${(passwordError || wrongCredentials) ? 'border-red-1' : 'border-gray-1'}`}>
                         <input className='ml-7 block flex-grow outline-none' type={passwordHidden ? 'password' : 'text'} placeholder='Введите пароль' value={password} onChange={e => {
                             setWrongCredentials(false)
-                            setPasswordError('')
+                            setPasswordError(false)
                             setPassword(e.target.value)
                         }} />
                         <div className='border-gray-1 border-l-[1px] mr-4 w-20 pl-3 select-none cursor-pointer text-center cursor-pofont-inter' onClick={() => setPasswordHidden(prev => !prev)}>{passwordHidden ? 'Показать' : 'Скрыть'}</div>

@@ -4,28 +4,29 @@ import Home from "./pages/Home"
 import Register from "./pages/Register"
 import Login from "./pages/Login"
 import Gym from "./pages/Gym"
-import Trainer from "./pages/Trainer"
+import Profile from "./pages/Profile"
 import Blog from "./pages/Blog"
 import Post from "./pages/Post"
+import { AuthContextProvider } from "./context/AuthContext"
 
 function App() {
 
   return (
-    <>
+    <AuthContextProvider>
       <BrowserRouter>
         <Navbar />
         <Routes>
           <Route path='/' element={<Home />} />
-          <Route path='/gym' element={<Gym />} />
+          <Route path='/gyms/:id' element={<Gym />} />
           <Route path='/blog' element={<Blog />} />
           <Route path='/blog/post' element={<Post />} />
-          <Route path='/trainer' element={<Trainer />} />
+          <Route path='/profile/:id' element={<Profile />} />
           <Route path='/register' element={<Register />} />
           <Route path='/login' element={<Login />} />
         </Routes>
         <div className="h-24" />
       </BrowserRouter>
-    </>
+    </AuthContextProvider>
   )
 }
 

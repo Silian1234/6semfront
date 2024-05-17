@@ -6,8 +6,8 @@ export function Navbar() {
     const page = location[location.length - 1]
     const main = page == ''
     const blog = page == 'blog'
-    const gym = page == 'gym'
-    const trainer = page == 'trainer'
+    // const gyms = page == 'gyms'
+    const profile = page == 'me'
 
     const navigate = useNavigate()
 
@@ -16,8 +16,8 @@ export function Navbar() {
         <div className="w-[1330px] flex mx-auto inter font-medium text-[20px] leading-[24px] gap-x-24 text-white justify-center items-center h-full">
             <span className={`cursor-pointer ${main ? 'text-orange-3' : ''}`} onClick={() => navigate('/')}>Страница клуба</span>
             <span className={`cursor-pointer ${blog ? 'text-orange-3' : ''}`} onClick={() => navigate('/blog')}>Мероприятия</span>
-            <span className={`cursor-pointer ${gym ? 'text-orange-3' : ''}`} onClick={() => navigate('/gym')}>Залы</span>
-            <span className={`cursor-pointer ${trainer ? 'text-orange-3' : ''}`} onClick={() => navigate('/trainer')}>Тренерская карта</span>
+            {/* <span className={`cursor-pointer ${gyms ? 'text-orange-3' : ''}`} onClick={() => navigate('/gyms')}>Залы</span> */}
+            <span className={`cursor-pointer ${profile ? 'text-orange-3' : ''}`} onClick={() => navigate('/profile/me')}>Мой профиль</span>
         </div>
     </nav>
 }

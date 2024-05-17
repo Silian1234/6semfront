@@ -1,4 +1,10 @@
+import axios from 'axios'
+import Photo228 from '../assets/dmitriy-nagiev-1430240479.jpg'
+
 export default function BlogOptions() {
+
+
+
 
     return <>
         <section className="flex items-center justify-between font-inter font-light text-[25px] leading-8 mb-12">
