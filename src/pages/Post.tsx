@@ -1,22 +1,132 @@
 import NavButton from "../components/NavButton"
-import Photo from '../assets/58489f94d6cea63cab1c83b99c292254.jpg'
+import { useNavigate, useParams } from "react-router-dom"
+import { useAuthContext } from "../hooks/useAuthContext"
+import { ChangeEvent, useEffect, useRef, useState } from "react"
+import GreenCheckIcon from "../assets/check-circle-svgrepo-com.svg"
+import RedCrossIcon from "../assets/cross-circle-svgrepo-com.svg"
+import EditIcon from "../assets/editprofile.svg"
+import CameraIcon from "../assets/CameraIcon.svg"
+import axios from "axios"
 
 export default function Post() {
+    const { state } = useAuthContext()
+    const [editing, setEditing] = useState(false)
+    const [postInfo, setPostInfo] = useState({ title: '', description: '', id: '', picture: '', text: '' })
+    const [inputTitle, setInputTitle] = useState('')
+    const [inputDescription, setInputDescription] = useState('')
+    const [selectedFile, setSelectedFile] = useState<Blob>()
+    const [inputText, setInputText] = useState('')
+
+    const navigate = useNavigate()
+
+    const ref = useRef<HTMLInputElement>(null)
+
+    const isStaff = state.user?.is_staff
+
+    const { id } = useParams()
+
+    const handleSubmit = async () => {
+        if (id === 'new') {
+            if (!selectedFile) return
+            setPostInfo({ title: inputTitle, description: inputDescription, id: '', picture: URL.createObjectURL(selectedFile), text: inputText })
+        }
+
+        if (!state.user) return
+        const formData = new FormData()
+        formData.append("title", inputTitle)
+        formData.append("description", inputDescription)
+        if (selectedFile) formData.append("picture", selectedFile)
+        formData.append("text", inputText)
+
+        const res = await axios.patch("http://127.0.0.1:8000/api/blog/" + id + '/', formData, {
+            headers: {
+                Authorization: `Token ${state.user.token}`
+            }
+        })
+
+        if (res.status === 200) navigate("/blog")
+    }
+
+    const handleUpload = async () => {
+        if (!selectedFile || !state.user) return
+
+        const formData = new FormData()
+        formData.append("title", postInfo.title)
+        formData.append("description", postInfo.description)
+        formData.append("picture", selectedFile)
+        formData.append("text", postInfo.text)
+
+        const res = await axios.post("http://127.0.0.1:8000/api/blog/", formData, {
+            headers: {
+                Authorization: `Token ${state.user.token}`
+            }
+        })
+
+        if (res.status === 201) navigate("/blog")
+    }
+
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            setSelectedFile(e.target.files[0])
+        }
+    }
+
+    useEffect(() => {
+        const fetchData = async (postId: string | undefined) => {
+            if (!postId) return
+
+            if (postId === 'new') {
+                setPostInfo({ title: 'Введите титул', description: 'Введите описание', id: '', picture: CameraIcon, text: 'Введите текст' })
+                setInputTitle('Введите титул')
+                setInputDescription('Введите описание')
+                setInputText('Введите текст')
+                return
+            }
+
+            const res = await axios.get('http://127.0.0.1:8000/api/blog/' + postId + '/')
+            console.log(res)
+            if (res.status === 200) {
+                setPostInfo(res.data)
+                setInputTitle(res.data.title)
+                setInputDescription(res.data.description)
+                setInputText(res.data.text)
+            }
+        }
+        fetchData(id)
+    }, [id])
+
     return <main className="w-[1300px] flex mx-auto flex-col mt-36">
-        <h2 className="font-inter leading-[45px] text-[37px] font-medium">Режим редактора</h2>
+        <h2 className="font-inter leading-[45px] text-[37px] font-medium">{editing ? "Режим редактора" : "Просмотр статьи"}</h2>
         <NavButton className="mt-10" />
-        <h2 className="font-inter leading-[45px] text-[37px] font-medium mt-10">Название статьи</h2>
-        <div><img src={Photo} className="w-full aspect-video rounded-3xl mt-10" /></div>
-        <hr className="h-[1px] border-0 my-10 bg-gray-2" />
-        <p className="font-inter font-extralight text-[20px] leading-[24px] gap-y-2 flex flex-col">
-            <span>Под лизингом в сфере недвижимости понимают договор долгосрочной ренты квартиры с правом ее выкупа. Будущий арендатор (он же – лизингополучатель) находит жилье и обращается в лизинговую компанию или к физическому лицу (лизингодателю). Последний выкупает квартиру у продавца и сдает ее лизингополучателю. Между ними заключается договор, в котором фиксируются все условия сделки - сроки платежей, размеры выплат и другие детали. Документ в обязательном порядке регистрируется в государственных органах.</span>
-            <br />
-            <span>В этом аспекте кроется существенное отличие лизинга от ипотеки. Последняя предполагает, что заемщик сразу после покупки становится собственником жилья. Эта деталь является едва ли не главной причиной непопулярности лизинга в нашей стране. Мало кто из физических лиц хочет начинать долгосрочный проект по покупке квартиры без оформления права собственности. Кроме того, ежемесячный платеж по договору лизинга выше, чем по ипотеке, причем эта разница может достигать 50-60%.</span>
-            <br />
-            <span>В этом аспекте кроется существенное отличие лизинга от ипотеки. Последняя предполагает, что заемщик сразу после покупки становится собственником жилья. Эта деталь является едва ли не главной причиной непопулярности лизинга в нашей стране. Мало кто из физических лиц хочет начинать долгосрочный проект по покупке квартиры без оформления права собственности. Кроме того, ежемесячный платеж по договору лизинга выше, чем по ипотеке, причем эта разница может достигать 50-60%.</span>
-        </p>
-        <div className='font-inter font-light text-[20px] leading-[14px] py-4 px-11 border-[1px] rounded-3xl flex justify-center items-center select-none cursor-pointer w-fit border-gray-6 self-end mt-10'>
-            Сохранить
-        </div>
+        {isStaff && editing ?
+            <>
+                <input type="text" value={inputTitle} onChange={e => setInputTitle(e.target.value)} className="font-inter leading-[45px] text-[37px] font-medium mt-10 bg-transparent" />
+                <input type="text" value={inputDescription} onChange={e => setInputDescription(e.target.value)} className="font-inter leading-[45px] text-[28px] mt-4 bg-transparent" />
+                <hr className="h-[1px] border-0 my-10 bg-gray-2" />
+
+                <div onClick={() => ref.current?.click()}><img src={selectedFile ? URL.createObjectURL(selectedFile) : postInfo.picture} className={`w-full aspect-video rounded-3xl object-cover cursor-pointer ${id === 'new' ? 'object-fill' : ''}`} /><input className='hidden' type="file" accept=".jpg, .png, .jpeg" ref={ref} onChange={handleChange} /></div>
+                <hr className="h-[1px] border-0 my-10 bg-gray-2" />
+                <textarea value={inputText} onChange={e => setInputText(e.target.value)} className="font-inter font-extralight text-[20px] leading-[24px] gap-y-2 flex flex-col bg-transparent" />
+            </>
+            :
+            <>
+                <h2 className="font-inter leading-[45px] text-[37px] font-medium mt-10">{postInfo.title}</h2>
+                <h3 className="font-inter leading-[45px] text-[28px] mt-4">{postInfo.description}</h3>
+                <hr className="h-[1px] border-0 my-10 bg-gray-2" />
+
+                <div><img src={postInfo.picture} className={`w-full aspect-video rounded-3xl object-cover ${id === 'new' ? 'object-fill' : ''}`} /></div>
+                <hr className="h-[1px] border-0 my-10 bg-gray-2" />
+                <p className="font-inter font-extralight text-[20px] leading-[24px] gap-y-2 flex flex-col">
+                    {postInfo.text}
+                </p>
+                {isStaff && id === 'new' ? <div className='font-inter font-light text-[20px] leading-[14px] py-4 px-11 border-[1px] rounded-3xl flex justify-center items-center select-none cursor-pointer w-fit border-gray-6 self-end mt-10' onClick={() => handleUpload()}>
+                    Опубликовать
+                </div> : null}
+            </>
+        }
+        {isStaff && editing ? <div className="fixed bottom-8 right-8 flex gap-4 cursor-pointer" onClick={() => setEditing(editing => !editing)}>
+            <div className="size-16" onClick={() => handleSubmit()}><img src={GreenCheckIcon} /></div>
+            <div className="size-16"><img src={RedCrossIcon} /></div>
+        </div> : <div className="fixed bottom-8 right-8 size-16 cursor-pointer" onClick={() => setEditing(editing => !editing)}><img src={EditIcon} /></div>}
     </main>
 }

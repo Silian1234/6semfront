@@ -19,6 +19,7 @@ export type User = {
     id: number
     avatar: string
     phone: string
+    username: string
 } | null
 
 type Action = {

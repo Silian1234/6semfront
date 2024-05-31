@@ -1,15 +1,20 @@
 import { FormEvent, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useRegister } from '../hooks/useRegister'
 
 export default function Register() {
+    const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
-    const [fatherName, setFatherName] = useState('')
     const [passwordHidden, setPasswordHidden] = useState(false)
     const [emailError, setEmailError] = useState(false)
     const [passwordError, setPasswordError] = useState('')
     const [wrongCredentials, setWrongCredentials] = useState(false)
+
+    const navigate = useNavigate()
+    const { register } = useRegister()
 
     const validateEmail = () => {
         if (!/[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,8}(.[a-z{2,8}])?/g.test(email)) {
@@ -47,6 +52,11 @@ export default function Register() {
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
+        const success = await register(username, password, firstName, lastName, email)
+        console.log(success)
+        if (!success) return setWrongCredentials(true)
+        navigate('/profile/me')
+
         if (!validateEmail() || !validatePassword()) return
 
     }
@@ -54,12 +64,18 @@ export default function Register() {
     return (
         <article className="">
             <hr className="border-0" />
-            <section className="bg-white w-[500px] pb-16 mx-auto mt-24 rounded-[36px] border-black border-2">
+            <section className="bg-white w-[500px] pb-8 mx-auto mt-24 rounded-[36px] border-black border-2">
                 <div className="flex place-content-between py-5 pl-6 pr-4 select-none">
                     <p className="text-2xl font-inter tracking-tight leading-[29px] font-light">Регистрация</p>
                 </div>
                 <hr className='border-0 h-[1px] bg-gray-1' />
                 <form onSubmit={handleSubmit}>
+                    <div className={`flex place-content-between mt-12 border-[1px] mx-4 py-5 rounded-md border-gray-1`}>
+                        <input className='mr-4 ml-7 block flex-grow outline-none' type="text" placeholder='Введите логин' value={username} onChange={e => {
+                            setWrongCredentials(false)
+                            setUsername(e.target.value)
+                        }} />
+                    </div>
                     <div className={`flex place-content-between mt-12 border-[1px] mx-4 py-5 rounded-md ${(emailError || wrongCredentials) ? 'border-red-1' : 'border-gray-1'}`}>
                         <input className='mr-4 ml-7 block flex-grow outline-none' type="text" placeholder='Введите адрес электронной почты' value={email} onChange={e => {
                             setWrongCredentials(false)
@@ -80,12 +96,6 @@ export default function Register() {
                             setLastName(e.target.value)
                         }} />
                     </div>
-                    <div className={`flex place-content-between mt-12 border-[1px] mx-4 py-5 rounded-md border-gray-1`}>
-                        <input className='mr-4 ml-7 block flex-grow outline-none' type="text" placeholder='Введите отчество' value={fatherName} onChange={e => {
-                            setWrongCredentials(false)
-                            setFatherName(e.target.value)
-                        }} />
-                    </div>
                     <div className={`flex place-content-between mt-12 border-[1px] mx-4 py-5 rounded-md ${(passwordError || wrongCredentials) ? 'border-red-1' : 'border-gray-1'}`}>
                         <input className='ml-7 block flex-grow outline-none' type={passwordHidden ? 'password' : 'text'} placeholder='Введите пароль' value={password} onChange={e => {
                             setWrongCredentials(false)
@@ -97,11 +107,14 @@ export default function Register() {
                     {(passwordError && !wrongCredentials) ? <p className='absolute text-red-1 ml-4 mt-1'>{passwordError}</p> : null}
                     {wrongCredentials ? <p className='absolute text-red-1 ml-4 mt-1 font-inter'>Указаны неверные данные</p> : null}
 
-                    
+
                     <div className='mx-4 mt-16'>
                         <button className='bg-orange-1 w-full h-16 font-bold text-white text-xl tracking-tight rounded-xl font-inter leading-[15px] active:bg-orange-2'>
                             Зарегистрироваться
                         </button>
+                        <div className='bg-orange-600 w-full h-16 font-bold text-white text-xl tracking-tight rounded-xl font-inter leading-[15px] active:bg-orange-2 grid place-content-center mt-4' onClick={() => navigate('/login')}>
+                            Войти
+                        </div>
                     </div>
                 </form>
             </section>

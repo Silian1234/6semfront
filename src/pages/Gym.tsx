@@ -21,37 +21,17 @@ export default function Gym() {
 
     const { id } = useParams()
     useEffect(() => {
-        axios.get("http://127.0.0.1:8000/api/gyms/" + id).then(res => { setGym(res.data) })
+        axios.get("http://127.0.0.1:8000/api/gyms/" + id).then(res => {
+            setGym(res.data); console.log(res.data);
+            setPersonnel(res.data.users.map((user: { avatar: unknown; user: { first_name: string; last_name: string }; description: unknown }) => ({ image: user.avatar, name: user.user.first_name + ' ' + user.user.last_name, description: user.description })))
+        })
     }, [id])
-
-    useEffect(() => {
-        const setGymPersonnel = async () => {
-            const getPersonnel = async (ids: string[]) => {
-                const result: { image: string, name: string, description: string }[] = []
-                ids.forEach(async (id) => {
-                    const res = await axios.get('http://127.0.0.1:8000/api/profiles/' + id)
-                    const newObject = { image: res.data.avatar, name: res.data.user.first_name + ' ' + res.data.user.last_name, description: res.data.description }
-                    result.push(newObject)
-                })
-
-                return result
-            }
-
-            let result228: { image: string, name: string, description: string }[] | undefined
-            if (gym) result228 = await getPersonnel(gym.users.map(user => user.toString()))
-               
-            if (result228) setPersonnel(result228)
-        }
-
-        setGymPersonnel()
-        console.log(personnel)
-    }, [gym])
 
     return <>
         {gym?.name ? <main className="w-[1300px] flex mx-auto flex-col mt-36">
             <HeroPhoto title={gym.name} pictures={gym.pictures} />
             <Description text={gym.description} />
-           <Personnel/>
+            <Personnel personnel={personnel!} />
             <Schedule />
             <Location location={gym.location} />
         </main> : null}

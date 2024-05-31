@@ -3,35 +3,42 @@ import { useAuthContext } from './useAuthContext'
 import { User, UserActions } from '../context/AuthContext'
 import axios from 'axios'
 
-export const useLogin = () => {
+export const useRegister = () => {
     const [error, setError] = useState<string | null>(null)
     const [isLoading, setIsLoading] = useState(false)
     const { dispatch } = useAuthContext()
 
-    const login = async (username: string, password: string) => {
+    const register = async (username: string, password: string, first_name: string,
+        last_name: string, email: string) => {
         setIsLoading(true)
         setError(null)
 
         try {
-            const response = await axios.post('http://127.0.0.1:8000/api/auth/login/', { username, password })
+            console.log(email)
+            const response = await axios.post('http://127.0.0.1:8000/api/auth/register/', { username, password, first_name, last_name, email })
 
-            if (response?.status !== 200) {
+            console.log(response.data)
+            console.log(response.status)
+
+            if (response?.status !== 201 && response?.status !== 200) {
                 setError('Что-то пошло не так')
+                console.log(response.status)
+                console.log(true)
                 setIsLoading(false)
                 return false
             }
 
-            if (response.status === 200) {
+            if (response.status === 201 || response.status === 200) {
                 const fullUser = await axios.get('http://127.0.0.1:8000/api/profiles/' + response.data.id)
+                console.log(fullUser)
                 const userObject: User = {
                     token: response.data.token,
-                    email: fullUser.data.user.email,
-                    first_name: fullUser.data.user.first_name,
-                    last_name: fullUser.data.user.last_name,
+                    email: fullUser.data.email,
+                    first_name: fullUser.data.first_name,
+                    last_name: fullUser.data.last_name,
                     description: fullUser.data.description,
                     groups: fullUser.data.user.groups,
                     gyms: fullUser.data.gyms,
-                    is_staff: fullUser.data.user.is_staff,
                     id: response.data.id,
                     avatar: fullUser.data.avatar,
                     phone: fullUser.data.phone_number,
@@ -40,13 +47,14 @@ export const useLogin = () => {
                 }
 
                 localStorage.setItem('user', JSON.stringify(userObject))
-                dispatch({type: UserActions.SET, payload: userObject})
+                dispatch({ type: UserActions.SET, payload: userObject })
 
                 setIsLoading(false)
                 return true
             }
 
         } catch (e) {
+            console.log(e)
             setIsLoading(false)
             return false
         }
@@ -54,5 +62,5 @@ export const useLogin = () => {
 
     }
 
-    return { login, isLoading, error }
+    return { register, isLoading, error }
 }

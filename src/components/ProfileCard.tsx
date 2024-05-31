@@ -7,7 +7,7 @@ type ProfileProps = {
 }
 
 export default function ProfileCard({ imageSrc, name, description }: ProfileProps) {
-    return <section className="w-[630px] h-[375px] bg-white rounded-2xl flex px-2 justify-center gap-x-12 py-6 shadow-dark">
+    return <section className="w-[630px] h-[375px] bg-white rounded-2xl flex justify-start px-6 pr-12 gap-x-12 py-6 shadow-dark">
         <div className="w-[200px] h-[260px]">
             <img src={imageSrc} className="h-full w-full object-cover object-center rounded-xl" />
         </div>
