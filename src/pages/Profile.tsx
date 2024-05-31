@@ -43,7 +43,7 @@ export default function Profile() {
         if (selectedFile)
             formData.append("avatar", selectedFile)
 
-        const res = await axios.patch('http://127.0.0.1:8000/api/profiles/' + state.user.id + '/', formData)
+        const res = await axios.patch('https://silian.pythonanywhere.com/api/profiles/' + state.user.id + '/', formData)
         console.log(res)
         if (res.status === 200) setUserInfo(prev => ({...prev, email: inputEmail, phone: inputPhone, description: inputDescription, avatar: selectedFile ? URL.createObjectURL(selectedFile) : prev?.avatar}))
     }
@@ -55,7 +55,7 @@ export default function Profile() {
     useEffect(() => {
         const fetchData = async (userId: string, myId: string) => {
             if (!id || !state.user) return
-            const res = await axios.get('http://127.0.0.1:8000/api/profiles/' + (userId === 'me' ? myId : userId) + '/')
+            const res = await axios.get('https://silian.pythonanywhere.com/api/profiles/' + (userId === 'me' ? myId : userId) + '/')
             console.log(res)
             if (res.status === 200) {
                 setUserInfo({

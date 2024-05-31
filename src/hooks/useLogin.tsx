@@ -13,7 +13,7 @@ export const useLogin = () => {
         setError(null)
 
         try {
-            const response = await axios.post('http://127.0.0.1:8000/api/auth/login/', { username, password })
+            const response = await axios.post('https://silian.pythonanywhere.com/api/auth/login/', { username, password })
 
             if (response?.status !== 200) {
                 setError('Что-то пошло не так')
@@ -22,7 +22,7 @@ export const useLogin = () => {
             }
 
             if (response.status === 200) {
-                const fullUser = await axios.get('http://127.0.0.1:8000/api/profiles/' + response.data.id)
+                const fullUser = await axios.get('https://silian.pythonanywhere.com/api/profiles/' + response.data.id)
                 const userObject: User = {
                     token: response.data.token,
                     email: fullUser.data.user.email,

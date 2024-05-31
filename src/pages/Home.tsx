@@ -15,7 +15,7 @@ export default function Home() {
     const [gyms, setGyms] = useState<Gym[]>([])
 
     useEffect(() => {
-        axios.get("http://127.0.0.1:8000/api/gyms").then(res => {setGyms(res.data); console.log(res.data)})
+        axios.get("https://silian.pythonanywhere.com/api/gyms").then(res => {setGyms(res.data); console.log(res.data)})
     }, [])
 
     return <main className="w-[1300px] flex mx-auto flex-col mt-36">

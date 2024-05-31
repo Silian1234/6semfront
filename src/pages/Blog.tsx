@@ -22,7 +22,7 @@ export default function Blog() {
     const [editing, setEditing] = useState(false)
 
     useEffect(() => {
-            axios.get('http://127.0.0.1:8000/api/blog').then(res => {setPosts(res.data.reverse()); console.log(res.data)})
+            axios.get('https://silian.pythonanywhere.com/api/blog').then(res => {setPosts(res.data.reverse()); console.log(res.data)})
     }, [])
 
     return <main className="w-[1300px] flex mx-auto flex-col mt-36">

@@ -21,7 +21,7 @@ export default function Gym() {
 
     const { id } = useParams()
     useEffect(() => {
-        axios.get("http://127.0.0.1:8000/api/gyms/" + id).then(res => {
+        axios.get("https://silian.pythonanywhere.com/api/gyms/" + id).then(res => {
             setGym(res.data); console.log(res.data);
             setPersonnel(res.data.users.map((user: { avatar: unknown; user: { first_name: string; last_name: string }; description: unknown }) => ({ image: user.avatar, name: user.user.first_name + ' ' + user.user.last_name, description: user.description })))
         })

@@ -38,7 +38,7 @@ export default function Post() {
         if (selectedFile) formData.append("picture", selectedFile)
         formData.append("text", inputText)
 
-        const res = await axios.patch("http://127.0.0.1:8000/api/blog/" + id + '/', formData, {
+        const res = await axios.patch("https://silian.pythonanywhere.com/api/blog/" + id + '/', formData, {
             headers: {
                 Authorization: `Token ${state.user.token}`
             }
@@ -56,7 +56,7 @@ export default function Post() {
         formData.append("picture", selectedFile)
         formData.append("text", postInfo.text)
 
-        const res = await axios.post("http://127.0.0.1:8000/api/blog/", formData, {
+        const res = await axios.post("https://silian.pythonanywhere.com/api/blog/", formData, {
             headers: {
                 Authorization: `Token ${state.user.token}`
             }
@@ -83,7 +83,7 @@ export default function Post() {
                 return
             }
 
-            const res = await axios.get('http://127.0.0.1:8000/api/blog/' + postId + '/')
+            const res = await axios.get('https://silian.pythonanywhere.com/api/blog/' + postId + '/')
             console.log(res)
             if (res.status === 200) {
                 setPostInfo(res.data)

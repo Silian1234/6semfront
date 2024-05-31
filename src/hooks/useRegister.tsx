@@ -15,7 +15,7 @@ export const useRegister = () => {
 
         try {
             console.log(email)
-            const response = await axios.post('http://127.0.0.1:8000/api/auth/register/', { username, password, first_name, last_name, email })
+            const response = await axios.post('https://silian.pythonanywhere.com/api/auth/register/', { username, password, first_name, last_name, email })
 
             console.log(response.data)
             console.log(response.status)
@@ -29,7 +29,7 @@ export const useRegister = () => {
             }
 
             if (response.status === 201 || response.status === 200) {
-                const fullUser = await axios.get('http://127.0.0.1:8000/api/profiles/' + response.data.id)
+                const fullUser = await axios.get('https://silian.pythonanywhere.com/api/profiles/' + response.data.id)
                 console.log(fullUser)
                 const userObject: User = {
                     token: response.data.token,

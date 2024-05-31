@@ -20,7 +20,7 @@ export default function BlogCard({ editing, title, picture, publish_date, descri
 
     const handleDelete = async () => {
         if (!state.user) return
-        const res = await axios.delete("http://127.0.0.1:8000/api/blog/" + id + '/', {
+        const res = await axios.delete("https://silian.pythonanywhere.com/api/blog/" + id + '/', {
             headers: {
                 Authorization: `Token ${state.user.token}`
             }
